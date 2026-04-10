@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOYEN | 嵌入式 & ROS & AI Developer</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 国风山水 SVG 背景 -->
+    <div id="ink-bg" aria-hidden="true">
+      <svg id="landscape-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <!-- 天空渐变（暖白到浅米） -->
+          <linearGradient id="sky-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f8f4ee"/>
+            <stop offset="100%" stop-color="#ede7de"/>
+          </linearGradient>
+          <!-- 水面渐变 -->
+          <linearGradient id="water-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ddd6cb" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#ccc4b8" stop-opacity="0.2"/>
+          </linearGradient>
+          <!-- 远山渐变（极淡墨） -->
+          <linearGradient id="far-mtn" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#a09890" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="#c0b8b0" stop-opacity="0.1"/>
+          </linearGradient>
+          <!-- 中景山渐变 -->
+          <linearGradient id="mid-mtn" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6e6860" stop-opacity="0.75"/>
+            <stop offset="100%" stop-color="#8a847a" stop-opacity="0.2"/>
+          </linearGradient>
+          <!-- 近景山坡渐变（浓墨） -->
+          <linearGradient id="near-slope" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3a3530" stop-opacity="0.88"/>
+            <stop offset="100%" stop-color="#4a4540" stop-opacity="0.55"/>
+          </linearGradient>
+        </defs>
+
+        <!-- ① 天空 -->
+        <rect width="1440" height="900" fill="url(#sky-grad)"/>
+
+        <!-- ② 远山（极淡，左右各一簇，像水墨留白） -->
+        <g opacity="0.65">
+          <!-- 左远山 -->
+          <path d="M-30,560 Q60,360 140,290 Q180,255 220,275 Q255,248 290,218 Q330,188 370,218 Q405,248 440,290 Q480,335 520,400 Q545,445 560,510 L-30,560Z"
+                fill="url(#far-mtn)"/>
+          <!-- 右远山 -->
+          <path d="M870,560 Q950,350 1030,280 Q1070,248 1110,268 Q1148,240 1185,212 Q1225,182 1265,212 Q1305,242 1340,285 Q1380,330 1420,410 Q1440,455 1460,520 L1460,560Z"
+                fill="url(#far-mtn)"/>
+        </g>
+
+        <!-- ③ 中景主峰（三座，居中最高，像参考图） -->
+        <g opacity="0.8">
+          <!-- 左峰 -->
+          <path d="M-50,700 Q50,520 115,430 Q150,382 185,340 Q220,300 255,268 Q290,238 325,268 Q358,295 388,340 Q420,388 450,445 Q480,500 505,560 Q525,610 535,660 L-50,700Z"
+                fill="url(#mid-mtn)"/>
+          <!-- 中间主峰（最高，最突出） -->
+          <path d="M580,720 Q645,520 715,415 Q755,355 795,295 Q828,252 860,215 Q890,185 920,215 Q948,242 975,285 Q1008,335 1035,395 Q1060,455 1080,520 Q1098,578 1108,638 L580,720Z"
+                fill="url(#mid-mtn)"/>
+          <!-- 右峰 -->
+          <path d="M1100,710 Q1155,530 1215,440 Q1255,390 1295,350 Q1330,315 1365,340 Q1395,365 1430,420 Q1460,480 1460,560 L1100,710Z"
+                fill="url(#mid-mtn)"/>
+        </g>
+
+        <!-- ④ 山腰云雾带 -->
+        <!-- 左云 -->
+        <g class="cloud-a" opacity="0.8">
+          <ellipse cx="220" cy="405" rx="260" ry="50" fill="white"/>
+          <ellipse cx="360" cy="388" rx="160" ry="38" fill="white"/>
+          <ellipse cx="100" cy="420" rx="145" ry="34" fill="white"/>
+        </g>
+        <!-- 中云 -->
+        <g class="cloud-b" opacity="0.78">
+          <ellipse cx="780" cy="398" rx="245" ry="48" fill="white"/>
+          <ellipse cx="920" cy="378" rx="155" ry="35" fill="white"/>
+          <ellipse cx="660" cy="415" rx="135" ry="32" fill="white"/>
+        </g>
+        <!-- 右云 -->
+        <g class="cloud-c" opacity="0.75">
+          <ellipse cx="1280" cy="408" rx="220" ry="44" fill="white"/>
+          <ellipse cx="1400" cy="390" rx="135" ry="32" fill="white"/>
+          <ellipse cx="1180" cy="425" rx="120" ry="30" fill="white"/>
+        </g>
+
+        <!-- ⑤ 近景山坡（底部，浓墨） -->
+        <g opacity="0.92">
+          <!-- 左近坡 -->
+          <path d="M-30,920 L-30,755 Q20,720 85,705 Q135,692 185,705 Q230,718 270,758 Q305,795 318,840 L318,920Z"
+                fill="url(#near-slope)"/>
+          <!-- 右近坡 -->
+          <path d="M1122,920 L1122,758 Q1165,722 1225,705 Q1275,690 1325,702 Q1375,718 1415,752 Q1442,785 1460,830 L1460,920Z"
+                fill="url(#near-slope)"/>
+        </g>
+
+        <!-- ⑥ 近景松树（左坡） -->
+        <g class="tree-left">
+          <!-- 松树 1 -->
+          <g class="tree-sway" style="transform-origin:18px 78px">
+            <line x1="18" y1="78" x2="18" y2="25" stroke="#2e2925" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M18,25 Q8,38 2,50 Q10,45 18,47 Q26,45 34,50 Q28,38 18,25Z" fill="#2e2925" opacity="0.88"/>
+            <path d="M18,38 Q6,48 0,60 Q9,55 18,57 Q27,55 36,60 Q30,48 18,38Z" fill="#2e2925" opacity="0.82"/>
+            <path d="M18,50 Q5,60 -1,72 Q8,66 18,68 Q28,66 37,72 Q31,60 18,50Z" fill="#2e2925" opacity="0.76"/>
+          </g>
+          <!-- 松树 2 -->
+          <g class="tree-sway" style="transform-origin:52px 72px; animation-delay:-1.5s">
+            <line x1="52" y1="72" x2="52" y2="18" stroke="#2e2925" stroke-width="2" stroke-linecap="round"/>
+            <path d="M52,18 Q42,30 36,42 Q44,37 52,39 Q60,37 68,42 Q62,30 52,18Z" fill="#2e2925" opacity="0.82"/>
+            <path d="M52,32 Q40,43 34,55 Q43,50 52,52 Q61,50 70,55 Q64,43 52,32Z" fill="#2e2925" opacity="0.76"/>
+            <path d="M52,46 Q39,56 33,68 Q43,62 52,64 Q61,62 71,68 Q65,56 52,46Z" fill="#2e2925" opacity="0.7"/>
+          </g>
+          <!-- 松树 3 -->
+          <g class="tree-sway" style="transform-origin:88px 80px; animation-delay:-2.8s">
+            <line x1="88" y1="80" x2="88" y2="36" stroke="#2e2925" stroke-width="2" stroke-linecap="round"/>
+            <path d="M88,36 Q79,47 74,58 Q81,54 88,56 Q95,54 102,58 Q97,47 88,36Z" fill="#2e2925" opacity="0.8"/>
+            <path d="M88,50 Q78,60 73,70 Q81,66 88,68 Q95,66 103,70 Q98,60 88,50Z" fill="#2e2925" opacity="0.74"/>
+          </g>
+        </g>
+
+        <!-- 右坡松树 -->
+        <g class="tree-right">
+          <g class="tree-sway" style="transform-origin:22px 68px; animation-delay:-0.8s">
+            <line x1="22" y1="68" x2="22" y2="18" stroke="#2e2925" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M22,18 Q12,30 6,42 Q14,37 22,39 Q30,37 38,42 Q32,30 22,18Z" fill="#2e2925" opacity="0.88"/>
+            <path d="M22,32 Q10,43 4,54 Q13,49 22,51 Q31,49 40,54 Q34,43 22,32Z" fill="#2e2925" opacity="0.82"/>
+            <path d="M22,45 Q9,55 3,67 Q13,61 22,63 Q31,61 41,67 Q35,55 22,45Z" fill="#2e2925" opacity="0.76"/>
+          </g>
+          <g class="tree-sway" style="transform-origin:58px 64px; animation-delay:-2s">
+            <line x1="58" y1="64" x2="58" y2="16" stroke="#2e2925" stroke-width="2" stroke-linecap="round"/>
+            <path d="M58,16 Q49,27 44,38 Q51,34 58,36 Q65,34 72,38 Q67,27 58,16Z" fill="#2e2925" opacity="0.82"/>
+            <path d="M58,30 Q47,40 42,51 Q50,46 58,48 Q66,46 74,51 Q69,40 58,30Z" fill="#2e2925" opacity="0.76"/>
+            <path d="M58,43 Q46,53 41,64 Q50,59 58,61 Q66,59 75,64 Q70,53 58,43Z" fill="#2e2925" opacity="0.7"/>
+          </g>
+        </g>
+
+        <!-- ⑦ 水面 + 倒影 -->
+        <g class="water-layer" opacity="0.55">
+          <rect x="0" y="810" width="1440" height="90" fill="url(#water-grad)"/>
+          <!-- 山体倒影（翻转模糊） -->
+          <g transform="translate(0,1600) scale(1,-1)" opacity="0.22">
+            <path d="M580,720 Q645,520 715,415 Q755,355 795,295 Q828,252 860,215 Q890,185 920,215 Q948,242 975,285 Q1008,335 1035,395 Q1060,455 1080,520 Q1098,578 1108,638 L580,720Z"
+                  fill="#6e6860"/>
+          </g>
+          <!-- 水面细横纹 -->
+          <line x1="0" y1="822" x2="1440" y2="822" stroke="#b8b0a4" stroke-width="0.5" opacity="0.4"/>
+          <line x1="0" y1="838" x2="1440" y2="838" stroke="#b8b0a4" stroke-width="0.4" opacity="0.28"/>
+          <line x1="0" y1="855" x2="1440" y2="855" stroke="#b8b0a4" stroke-width="0.3" opacity="0.2"/>
+        </g>
+
+        <!-- ⑧ 水面薄雾 -->
+        <ellipse cx="720" cy="818" rx="780" ry="28" fill="white" opacity="0.5"/>
+
+      </svg>
+    </div>
+
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+        <div class="nav-brand">FOYEN</div>
+        <div class="nav-links">
+            <a href="#about" class="nav-link">关于</a>
+            <a href="#projects" class="nav-link">项目</a>
+            <a href="#awards" class="nav-link">竞赛</a>
+            <a href="#contact" class="nav-link">联系</a>
+            <a href="https://gogopaopao.github.io/newstack/" target="_blank" class="nav-link nav-highlight">博客</a>
+            <span class="nav-link disabled" style="opacity: 0.5; cursor: not-allowed;">简历</span>
+        </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <main class="main-content">
+
+        <!-- Hero Section -->
+        <section id="hero" class="section hero-section" data-section="hero">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span>Available for opportunities</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="title-en">FOYEN</span>
+                    <!-- <span class="title-zh">名字</span> -->
+                </h1>
+                <div class="typed-container">
+                    <span id="typed-text" class="typed-text"></span>
+                    <span class="cursor-blink">_</span>
+                </div>
+                <p class="hero-desc">
+                    武汉理工大学 · 测控技术与仪器 · 本科<br>
+                    嵌入式开发 · ROS · 深度学习
+                </p>
+                <div class="hero-links">
+                    <a href="https://gogopaopao.github.io/newstack/" target="_blank" class="link-btn primary">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        技术博客
+                    </a>
+                    <a href="https://github.com/gogopaopao" target="_blank" class="link-btn secondary">
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub
+                    </a>
+                    <span class="link-btn outline disabled">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        简历未开放
+                    </span>
+                </div>
+            </div>
+            <div class="scroll-hint">
+                <span>往下滚动</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M19 12l-7 7-7-7"/>
+                </svg>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section about-section" data-section="about">
+            <div class="section-header">
+                <span class="section-tag">01</span>
+                <h2 class="section-title">关于我</h2>
+            </div>
+            <div class="bento-grid">
+                <div class="bento-card card-identity tilt-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+                        </svg>
+                    </div>
+                    <h3>身份</h3>
+                    <p>武汉理工大学<br>测控技术与仪器专业<br>2026 届毕业生</p>
+                </div>
+                <div class="bento-card card-focus tilt-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </div>
+                    <h3>方向</h3>
+                    <p>嵌入式系统开发<br>机器人技术 (ROS)<br>SLAM 与 计算机视觉</p>
+                </div>
+                <div class="bento-card card-philosophy tilt-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                    </div>
+                    <h3>习惯</h3>
+                    <p>用 Hugo 建技术博客<br>记录复盘与底层原理<br>喜欢刨根问底</p>
+                </div>
+                <div class="bento-card card-skills">
+                    <h3>技术栈</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">C/C++</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">STM32</span>
+                        <span class="skill-tag">RT-Thread</span>
+                        <span class="skill-tag">ROS</span>
+                        <span class="skill-tag">SLAM</span>
+                        <span class="skill-tag">OpenCV</span>
+                        <span class="skill-tag">PyTorch</span>
+                        <span class="skill-tag">嵌入式</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section projects-section" data-section="projects">
+            <div class="section-header">
+                <span class="section-tag">02</span>
+                <h2 class="section-title">项目作品</h2>
+            </div>
+            <div class="projects-showcase">
+                <div class="project-card tilt-card" data-project="ros">
+                    <div class="project-preview">
+                        <div class="project-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+                            </svg>
+                        </div>
+                        <h3>智能机器人系统</h3>
+                        <p class="project-brief">基于华为昇腾 310 与 STM32F103，实现多传感器融合与 SLAM 建图</p>
+                        <span class="view-more">点击查看详情 →</span>
+                    </div>
+                </div>
+                <div class="project-card tilt-card" data-project="sorting">
+                    <div class="project-preview">
+                        <div class="project-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                        </div>
+                        <h3>RT-Thread 视觉分拣系统</h3>
+                        <p class="project-brief">瑞萨开发板 + RT-Thread，六轴机械臂运动学控制与 MQTT 通信</p>
+                        <span class="view-more">点击查看详情 →</span>
+                    </div>
+                </div>
+                <div class="project-card tilt-card" data-project="sensor">
+                    <div class="project-preview">
+                        <div class="project-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                        </div>
+                        <h3>高精度传感器系统</h3>
+                        <p class="project-brief">微弱信号提取、放大滤波、硬件调理电路与 PCB 制板全链路设计</p>
+                        <span class="view-more">点击查看详情 →</span>
+                    </div>
+                </div>
+                <div class="project-card tilt-card" data-project="mcu">
+                    <div class="project-preview">
+                        <div class="project-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
+                                <rect x="9" y="9" width="6" height="6"/>
+                                <line x1="9" y1="1" x2="9" y2="4"/>
+                                <line x1="15" y1="1" x2="15" y2="4"/>
+                                <line x1="9" y1="20" x2="9" y2="23"/>
+                                <line x1="15" y1="20" x2="15" y2="23"/>
+                                <line x1="20" y1="9" x2="23" y2="9"/>
+                                <line x1="20" y1="14" x2="23" y2="14"/>
+                                <line x1="1" y1="9" x2="4" y2="9"/>
+                                <line x1="1" y1="14" x2="4" y2="14"/>
+                            </svg>
+                        </div>
+                        <h3>STM32 智能采集系统</h3>
+                        <p class="project-brief">多传感器数据采集 + ESP8266 远程控制 + OLED 声光报警</p>
+                        <span class="view-more">点击查看详情 →</span>
+                    </div>
+                </div>
+                <div class="project-card tilt-card" data-project="rul">
+                    <div class="project-preview">
+                        <div class="project-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                        </div>
+                        <h3>轴承剩余寿命预测</h3>
+                        <p class="project-brief">基于 CNN-LSTM 与 CBAM 注意力机制的深度学习 RUL 预测</p>
+                        <span class="view-more">点击查看详情 →</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Awards Section -->
+        <section id="awards" class="section awards-section" data-section="awards">
+            <div class="section-header">
+                <span class="section-tag">03</span>
+                <h2 class="section-title">竞赛荣誉</h2>
+            </div>
+            <div class="timeline">
+                <div class="timeline-line"></div>
+                
+                <!-- 2025 -->
+                <div class="timeline-item tilt-card">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2025</span>
+                        <h3>第二十七届中国机器人及人工智能大赛</h3>
+                        <div class="timeline-badge award-national">国二等奖</div>
+                        <p class="timeline-desc">机器人应用赛（智能驾驶）</p>
+                        <p class="timeline-tech">华为昇腾 310 · STM32F103 · ROS · SLAM · 多传感器融合</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item tilt-card">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2025</span>
+                        <h3>第八届嵌入式芯片与系统设计竞赛</h3>
+                        <div class="timeline-badge award-region">中部赛区二等奖</div>
+                        <p class="timeline-desc">芯片应用赛道</p>
+                        <p class="timeline-tech">RT-Thread · 瑞萨开发板 · 机械臂控制 · MQTT · LVGL</p>
+                    </div>
+                </div>
+
+                <!-- 2024 -->
+                <div class="timeline-item tilt-card">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2024</span>
+                        <h3>第七届中国高校智能机器人大赛</h3>
+                        <div class="timeline-badge award-region">湖北省二等奖</div>
+                        <p class="timeline-desc">统一部件组轮式自主格斗</p>
+                        <p class="timeline-tech">ROS · 路径规划 · 目标识别</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item tilt-card">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2024</span>
+                        <h3>第十七届中国大学生计算机设计大赛</h3>
+                        <div class="timeline-badge award-region">中南地区赛二等奖</div>
+                        <p class="timeline-desc">人工智能挑战赛</p>
+                        <p class="timeline-tech">深度学习 · 计算机视觉</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item tilt-card">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2024</span>
+                        <h3>第十九届全国大学生智能汽车竞赛</h3>
+                        <div class="timeline-badge award-participation">湖北省优秀奖</div>
+                        <p class="timeline-desc">室外 ROS 无人车赛</p>
+                        <p class="timeline-tech">ROS · 室外导航 · 视觉识别</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section contact-section" data-section="contact">
+            <div class="section-header">
+                <span class="section-tag">04</span>
+                <h2 class="section-title">联系方式</h2>
+            </div>
+            <div class="contact-content">
+                <p class="contact-intro">如果你对嵌入式开发、机器人技术或任何合作机会感兴趣，欢迎联系我。</p>
+                <div class="contact-links">
+                    <div class="contact-item tilt-card">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        <span>339362@whut.edu.cn</span>
+                    </div>
+                    <a href="https://github.com/gogopaopao" target="_blank" class="contact-item tilt-card">
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        <span>GitHub @gogopaopao</span>
+                    </a>
+                    <a href="https://gogopaopao.github.io/newstack/" target="_blank" class="contact-item tilt-card">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                        <span>技术博客</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 FOYEN · 用代码丈量世界</p>
+        </footer>
+
+    </main>
+
+    <!-- 项目详情模态框 -->
+    <div class="project-modal" id="project-modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <div class="modal-header">
+                <span class="modal-tag" id="modal-tag">ROS</span>
+                <h2 id="modal-title">智能机器人系统</h2>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3>项目概述</h3>
+                    <p class="modal-desc" id="modal-desc">基于 ROS 的移动机器人，实现自主导航、障碍物规避与 SLAM 建图。</p>
+                </div>
+                <div class="modal-section">
+                    <h3>技术栈</h3>
+                    <div class="modal-tags" id="modal-tags">
+                        <span>ROS</span>
+                        <span>SLAM</span>
+                        <span>激光雷达</span>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3>核心功能</h3>
+                    <ul id="modal-features">
+                        <li>激光雷达环境感知与建图</li>
+                        <li>自主路径规划与导航</li>
+                        <li>动态障碍物检测与规避</li>
+                        <li>实时定位与姿态控制</li>
+                    </ul>
+                </div>
+                <div class="modal-section">
+                    <h3>详细说明</h3>
+                    <p class="modal-detail-text" id="modal-detail"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页码导航 -->
+    <nav class="page-nav">
+        <div class="nav-dot active" data-section="hero"></div>
+        <div class="nav-dot" data-section="about"></div>
+        <div class="nav-dot" data-section="projects"></div>
+        <div class="nav-dot" data-section="awards"></div>
+        <div class="nav-dot" data-section="contact"></div>
+    </nav>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
